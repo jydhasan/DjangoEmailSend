@@ -1,5 +1,6 @@
 from email import message
 import email
+import django
 from django.shortcuts import render
 
 # Create your views here.
@@ -15,7 +16,9 @@ from session.forms import SignUpForm
 
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage
+from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 
 
 def loginuser(request):
@@ -54,8 +57,10 @@ def registration(request):
                 'user': user,
                 'domain': current_site.domain
             })
+            text_contet=strip_tags(message)
             send_mail = form.cleaned_data.get('email')
-            email = EmailMessage(mail_subject, message, to=[send_mail])
+            email = EmailMultiAlternatives(mail_subject, text_contet, to=[send_mail])
+            email.attach_alternative(message,"text/html")
             email.send()
             return redirect('/session/login')
     else:
