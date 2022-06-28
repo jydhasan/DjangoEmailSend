@@ -35,8 +35,14 @@
                 </li>
                
                {% if user.is_authenticated %}
-                <li class="nav-item">
-                    <a class="btn btn-primary ml-2" href="/session/logout/">Logout</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdownId" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {{ user.username }}
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="dropdownId">
+                        <a class="dropdown-item" href="/session/logout/">LogOut</a>
+                        <a class="dropdown-item" href="/session/password/">Change Password</a>
+                    </div>
                 </li>
                 {% else %}
                 <li class="nav-item">

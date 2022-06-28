@@ -1,17 +1,10 @@
-from email import message
-import email
-import django
-from django.shortcuts import render
-
-# Create your views here.
-
-
-from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.forms import AuthenticationForm,PasswordChangeForm
+from django.contrib.auth import authenticate, login, logout,update_session_auth_hash
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from session.forms import SignUpForm
+from django.http import request
 
 
 from django.contrib.sites.shortcuts import get_current_site
@@ -66,3 +59,15 @@ def registration(request):
     else:
         form = SignUpForm()
     return render(request, 'session/signup.html', {'form': form})
+
+def changepassword(request):
+    if request.method == "POST":
+        form = PasswordChangeForm(user=request.user, data=request.POST)
+        if form.is_valid():
+            form.save()
+            # update_session_auth_hash(request,form.user)
+            messages.success(request,"Password successfully changed") 
+            return redirect('/tuition/home/')
+    else:
+        form=PasswordChangeForm(user=request.user)
+    return render(request,'session/change_pass.html',{'form':form})
